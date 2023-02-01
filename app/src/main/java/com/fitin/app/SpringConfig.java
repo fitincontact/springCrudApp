@@ -7,9 +7,14 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.Database;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -23,6 +28,7 @@ import java.util.Properties;
 @PropertySource("classpath:hibernate.properties")
 @EnableTransactionManagement
 @EnableWebMvc
+@EnableJpaRepositories("com.fitin.crud")
 public class SpringConfig implements WebMvcConfigurer {
     @Autowired
     private ApplicationContext applicationContext;
@@ -65,5 +71,36 @@ public class SpringConfig implements WebMvcConfigurer {
         transactionManager.setSessionFactory(sessionFactory().getObject());
 
         return transactionManager;
+    }
+
+//without hiber
+//    @Bean
+//    public JpaTransactionManager transactionManager(EntityManagerFactory emf) {
+//        return new JpaTransactionManager(emf);
+//    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager() {
+        HibernateTransactionManager transactionManager = new HibernateTransactionManager();
+        transactionManager.setSessionFactory(sessionFactory().getObject());
+
+        return transactionManager;
+    }
+
+    @Bean
+    public JpaVendorAdapter jpaVendorAdapter() {
+        HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
+        jpaVendorAdapter.setDatabase(Database.POSTGRESQL);
+        jpaVendorAdapter.setGenerateDdl(true);
+        return jpaVendorAdapter;
+    }
+
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean lemfb = new LocalContainerEntityManagerFactoryBean();
+        lemfb.setDataSource(dataSource());
+        lemfb.setJpaVendorAdapter(jpaVendorAdapter());
+        lemfb.setPackagesToScan("com.fitin");
+        return lemfb;
     }
 }
