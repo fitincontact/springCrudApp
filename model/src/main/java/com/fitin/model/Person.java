@@ -1,19 +1,27 @@
 package com.fitin.model;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
+@Schema(title = "Person entity")
 @Entity
 @Table(name = "Persons")
 public class Person implements Serializable {
+    @Parameter(name = "id", example = "1")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
+    @Parameter(name = "name", example = "Jon")
     @Column(name = "name")
     private String name;
+    @Parameter(name = "age", example = "21")
     @Column(name = "age")
     private int age;
+    @Parameter(name = "email", example = "jon@fog.com")
     @Column(name = "email")
     private String email;
 
