@@ -1,6 +1,6 @@
 package com.fitin.crud.dao;
 
-import com.fitin.model.Persons;
+import com.fitin.model.Person;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -16,59 +16,58 @@ public class PersonDAO {
     private SessionFactory sessionFactory;
 
     @Transactional
-    public String create(Persons persons) {
+    public String create(Person personNew) {
         Session session = sessionFactory.getCurrentSession();
-        Persons person = read(persons);
+        Person personOld = read(personNew);
 
-        String result = "Person with this parameters is exist. " + persons;
+        String result = "Person with this parameters is exist. " + personNew;
 
-        if (person == null) {
-            session.save(persons);
-            result = "Create new Person";
+        if (personOld == null) {
+            session.save(personNew);
+            result = "Create new Person " + personNew;
         }
 
         return result;
     }
 
     @Transactional(readOnly = true)
-    public List<Persons> read() {
+    public List<Person> read() {
         Session session = sessionFactory.getCurrentSession();
 
-        return session.createQuery("select p from Persons p", Persons.class).getResultList();
+        return session.createQuery("from Person p", Person.class).getResultList();
     }
 
     @Transactional(readOnly = true)
-    public Persons read(int id) {
+    public Person read(int id) {
         Session session = sessionFactory.getCurrentSession();
-        return session.get(Persons.class, id);
+        return session.get(Person.class, id);
     }
 
     @Transactional(readOnly = true)
-    public Persons read(Persons persons) {
+    public Person read(Person person) {
         Session session = sessionFactory.getCurrentSession();
 
-        Query<Persons> query = session.createQuery("select p from Persons p where name = :name and age = :age and email = :email");
-        query.setParameter("name", persons.getName());
-        query.setParameter("age", persons.getAge());
-        query.setParameter("email", persons.getEmail());
+        Query<Person> query = session.createQuery("from Person p where name = :name and age = :age and email = :email");
+        query.setParameter("name", person.getName());
+        query.setParameter("age", person.getAge());
+        query.setParameter("email", person.getEmail());
 
         return query.uniqueResult();
-
     }
 
     @Transactional
-    public void update(int id, Persons updatedPersons) {
+    public void update(int id, Person updatedPerson) {
         Session session = sessionFactory.getCurrentSession();
-        Persons personsToBeUpdated = session.get(Persons.class, id);
+        Person personToBeUpdated = session.get(Person.class, id);
 
-        personsToBeUpdated.setName(updatedPersons.getName());
-        personsToBeUpdated.setAge(updatedPersons.getAge());
-        personsToBeUpdated.setEmail(updatedPersons.getEmail());
+        personToBeUpdated.setName(updatedPerson.getName());
+        personToBeUpdated.setAge(updatedPerson.getAge());
+        personToBeUpdated.setEmail(updatedPerson.getEmail());
     }
 
     @Transactional
     public void delete(int id) {
         Session session = sessionFactory.getCurrentSession();
-        session.remove(session.get(Persons.class, id));
+        session.remove(session.get(Person.class, id));
     }
 }

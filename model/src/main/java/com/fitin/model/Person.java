@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "Persons")
-public class Persons implements Serializable {
+public class Person implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -17,10 +17,10 @@ public class Persons implements Serializable {
     @Column(name = "email")
     private String email;
 
-    public Persons() {
+    public Person() {
     }
 
-    public Persons(String name, String email) {
+    public Person(String name, String email) {
         this.name = name;
         this.email = email;
     }
@@ -59,7 +59,7 @@ public class Persons implements Serializable {
 
     @Override
     public String toString() {
-        return "Persons{" +
+        return "Person{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", age=" + age +

@@ -1,7 +1,7 @@
 package com.fitin.api;
 
 import com.fitin.crud.dao.PersonDAO;
-import com.fitin.model.Persons;
+import com.fitin.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,26 +14,26 @@ public class PersonController {
     private PersonDAO personDAO;
 
     @PostMapping()
-    public String create(@RequestBody Persons persons) {
-        return personDAO.create(persons);
+    public String create(@RequestBody Person person) {
+        return personDAO.create(person);
     }
 
     @GetMapping()
-    public List<Persons> read() {
+    public List<Person> read() {
         return personDAO.read();
     }
 
     @GetMapping("/{id}")
-    public Persons read(@PathVariable("id") int id) {
+    public Person read(@PathVariable("id") int id) {
         return personDAO.read(id);
     }
 
     @PutMapping("/{id}")
-    public String update(@RequestBody Persons persons,
+    public String update(@RequestBody Person person,
                          @PathVariable("id") int id
     ) {
-        personDAO.update(id, persons);
-        return "Update persons with id: " + id;
+        personDAO.update(id, person);
+        return "Update person with id: " + id;
     }
 
     @DeleteMapping("/{id}")
