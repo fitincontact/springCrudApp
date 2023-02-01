@@ -20,6 +20,6 @@ public class SpringDataJPAController {
 
     @GetMapping()
     public List<Person> read() {
-        return (List<Person>) repository.findAll();
+        return repository.findAll();
     }
 }
